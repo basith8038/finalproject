@@ -1476,7 +1476,28 @@ namespace cs251
         }
    }        
   
-
+    //horizontal shelves next to open bo in middle pulley
+   {
+      { 
+        b2PolygonShape shape;
+        shape.SetAsBox(2.9f, 0.15f);
+  
+        b2BodyDef bd;
+        bd.position.Set(12.6f, 5.0f);
+        b2Body* ground = m_world->CreateBody(&bd);
+        ground->CreateFixture(&shape, 0.0f);    
+      }
+      { 
+      
+        b2PolygonShape shape;
+        shape.SetAsBox(2.9f, 0.15f);
+  
+        b2BodyDef bd;
+        bd.position.Set(27.6f, 5.0f);
+        b2Body* ground = m_world->CreateBody(&bd);
+        ground->CreateFixture(&shape, 0.0f);    
+      }
+    }
 
   }
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
