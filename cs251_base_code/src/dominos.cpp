@@ -1032,7 +1032,231 @@ namespace cs251
           spherebody->CreateFixture(&ballfd);
         }
    }        
-  }
+  //The middle pulley system
+        /** \brief THIS BLOCK CREATES THE ENTIRE MIDDLE PULLEY SYSTEM  ALONG WITH ITS COMPONENTS*/
+    {
+      {
+      b2Body* sbody;
+      b2CircleShape circle;
+      circle.m_radius = 0.75;
+
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 50.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_staticBody;
+      ballbd.position.Set(15.f, 40.f);
+      sbody = m_world->CreateBody(&ballbd);
+      sbody->CreateFixture(&ballfd);
+      }
+      {
+      b2Body* sbody;
+      b2CircleShape circle;
+      circle.m_radius = 0.75;
+
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 50.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_staticBody;
+      ballbd.position.Set(25.f, 40.f);
+      sbody = m_world->CreateBody(&ballbd);
+      sbody->CreateFixture(&ballfd);
+      }
+      {
+      //the two boxes of middle pulley
+      b2PolygonShape shape;
+      shape.SetAsBox(1.0f, 1.0f);
+      b2BodyDef bd1;
+      b2BodyDef bd2;
+      bd1.position.Set(15.0f, 35.0f);
+      bd1.type = b2_dynamicBody;
+      bd2.position.Set(25.0f, 35.0f);
+      bd2.type = b2_dynamicBody;
+      b2Body* body1 = m_world->CreateBody(&bd1);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 10.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body1->CreateFixture(fd);
+      body2->CreateFixture(fd);
+      //the middle joint for pulley
+      b2Body* sbody;
+      b2CircleShape circle;
+      circle.m_radius = 0.05;
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 30.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(20.f, 30.f);
+      sbody = m_world->CreateBody(&ballbd);
+      sbody->CreateFixture(&ballfd);
+      // The pulley joint left half
+      b2PulleyJointDef* myjoint1 = new b2PulleyJointDef();
+      b2Vec2 worldAnchorOnBody11(15, 35.5); // Anchor point on body 1 in world axis
+      b2Vec2 worldAnchorOnBody12(20, 30); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorGround11(15, 40); // Anchor point for ground 1 in world axis
+      b2Vec2 worldAnchorGround12(15, 40); // Anchor point for ground 2 in world axis
+      float32 ratio1 = 1.0f; // Define ratio
+      myjoint1->Initialize(body1, sbody, worldAnchorGround11, worldAnchorGround12, body1->GetWorldCenter(), sbody->GetWorldCenter(), ratio1);
+      m_world->CreateJoint(myjoint1);
+      // The pulley joint right half
+      b2PulleyJointDef* myjoint2 = new b2PulleyJointDef();
+      b2Vec2 worldAnchorOnBody21(25, 35.5); // Anchor point on body 1 in world axis
+      b2Vec2 worldAnchorOnBody22(20, 30); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorGround21(25, 40); // Anchor point for ground 1 in world axis
+      b2Vec2 worldAnchorGround22(25, 40); // Anchor point for ground 2 in world axis
+      float32 ratio2 = 1.0f; // Define ratio
+      myjoint2->Initialize(body2, sbody, worldAnchorGround21, worldAnchorGround22, body2->GetWorldCenter(), sbody->GetWorldCenter(), ratio2);
+      m_world->CreateJoint(myjoint2);
+      //bottom joint for pan
+      b2Body* sbody2;
+      b2CircleShape circle2;
+      circle2.m_radius = 0.05;
+      b2FixtureDef ballfd2;
+      ballfd2.shape = &circle2;
+      ballfd2.density = 30.0f;
+      ballfd2.friction = 0.0f;
+      ballfd2.restitution = 0.0f;
+      b2BodyDef ballbd2;
+      ballbd2.type = b2_dynamicBody;
+      ballbd2.position.Set(20.f, 10.f);
+      sbody2 = m_world->CreateBody(&ballbd2);
+      sbody2->CreateFixture(&ballfd2);
+      //thread connecting two joints
+      b2DistanceJointDef jointDef;
+      b2Vec2 worldAnchorOnBodyA(20, 30); // Anchor point on body A in world axis
+      b2Vec2 worldAnchorOnBodyB(20, 10); // Anchor point on body B in world axis
+      jointDef.Initialize(sbody, sbody2, worldAnchorOnBodyA, worldAnchorOnBodyB);
+      jointDef.collideConnected = false;
+      jointDef.frequencyHz = 0.0f;
+      jointDef.dampingRatio = 1.f;
+      m_world->CreateJoint(&jointDef);
+      //open box at bottom of pulley
+      b2BodyDef *bd = new b2BodyDef;
+      bd->type = b2_dynamicBody;
+      bd->position.Set(20,-3);
+      bd->fixedRotation = true;
+      b2FixtureDef *fd1 = new b2FixtureDef;
+      fd1->density = 10.0;
+      fd1->friction = 0.5;
+      fd1->restitution = 0.f;
+      fd1->shape = new b2PolygonShape;
+      b2PolygonShape bs1;
+      bs1.SetAsBox(4,0.2, b2Vec2(0.f,-1.9f), 0);
+      fd1->shape = &bs1;
+      b2FixtureDef *fd2 = new b2FixtureDef;
+      fd2->density = 10.0;
+      fd2->friction = 0.5;
+      fd2->restitution = 0.f;
+      fd2->shape = new b2PolygonShape;
+      b2PolygonShape bs2;
+      bs2.SetAsBox(0.2,1, b2Vec2(4.0f,-1.f), 0);
+      fd2->shape = &bs2;
+      b2FixtureDef *fd3 = new b2FixtureDef;
+      fd3->density = 10.0;
+      fd3->friction = 0.5;
+      fd3->restitution = 0.f;
+      fd3->shape = new b2PolygonShape;
+      b2PolygonShape bs3;
+      bs3.SetAsBox(0.2,1, b2Vec2(-4.0f,-1.f), 0);
+      fd3->shape = &bs3;
+      b2Body* box1 = m_world->CreateBody(bd);
+      box1->CreateFixture(fd1);
+      box1->CreateFixture(fd2);
+      box1->CreateFixture(fd3);
+      //threads connecting 2nd joint and openbox
+      b2DistanceJointDef jointDef1;
+      b2DistanceJointDef jointDef2;
+      b2Vec2 worldAnchorOnBodyA1(20, 10); // Anchor point on body A in world axis
+      b2Vec2 worldAnchorOnBodyB1(16, -3); // Anchor point on body B in world axis
+      b2Vec2 worldAnchorOnBodyA2(20, 10); // Anchor point on body A in world axis
+      b2Vec2 worldAnchorOnBodyB2(24, -3); // Anchor point on body B in world axis
+      jointDef1.Initialize(sbody2, box1, worldAnchorOnBodyA1, worldAnchorOnBodyB1);
+      jointDef2.Initialize(sbody2, box1, worldAnchorOnBodyA2, worldAnchorOnBodyB2);
+      jointDef1.collideConnected = false;
+      jointDef1.frequencyHz = 0.0f;
+      jointDef1.dampingRatio = 1.f;
+      m_world->CreateJoint(&jointDef1);
+      jointDef2.collideConnected = false;
+      jointDef2.frequencyHz = 0.0f;
+      jointDef2.dampingRatio = 1.f;
+      m_world->CreateJoint(&jointDef2);
+      }
+    }
+    //The right pulley system
+            /** \brief THIS BLOCK CREATES THE ENTIRE RIGHT  PULLEY SYSTEM  ALONG WITH ITS COMPONENTS*/
+    {
+      b2BodyDef *bd = new b2BodyDef;
+      bd->type = b2_dynamicBody;
+      bd->position.Set(112,2);//changed
+      bd->fixedRotation = true;
+
+      //The closed box
+      b2FixtureDef *fd1 = new b2FixtureDef;
+      fd1->density = 10.0;
+      fd1->friction = 0.5;
+      fd1->restitution = 0.f;
+      fd1->shape = new b2PolygonShape;
+      b2PolygonShape bs1;
+      bs1.SetAsBox(1.5, 0.2, b2Vec2(0.f,-1.4f), 0);
+      fd1->shape = &bs1;
+      b2FixtureDef *fd2 = new b2FixtureDef;
+      fd2->density = 10.0;
+      fd2->friction = 0.5;
+      fd2->restitution = 0.f;
+      fd2->shape = new b2PolygonShape;
+      b2PolygonShape bs2;
+      bs2.SetAsBox(0.2, 1.5, b2Vec2(1.5f,0.f), 0);
+      fd2->shape = &bs2;
+      b2FixtureDef *fd3 = new b2FixtureDef;
+      fd3->density = 10.0;
+      fd3->friction = 0.5;
+      fd3->restitution = 0.f;
+      fd3->shape = new b2PolygonShape;
+      b2PolygonShape bs3;
+      bs3.SetAsBox(0.2, 1.5, b2Vec2(-1.5f,0.f), 0);
+      fd3->shape = &bs3;
+      b2FixtureDef *fd4 = new b2FixtureDef;
+      fd4->density = 10.0;
+      fd4->friction = 0.5;
+      fd4->restitution = 0.f;
+      fd4->shape = new b2PolygonShape;
+      b2PolygonShape bs4;
+      bs4.SetAsBox(1.5, 0.2, b2Vec2(0.f,1.4f), 0);
+      fd4->shape = &bs4;
+
+      b2Body* box1 = m_world->CreateBody(bd);
+      box1->CreateFixture(fd1);
+      box1->CreateFixture(fd2);
+      box1->CreateFixture(fd3);
+      box1->CreateFixture(fd4);
+
+      //The bar
+      bd->position.Set(92,20);
+      fd1->density = 40.15;//fd1->density = 34.0;
+      b2Body* box2 = m_world->CreateBody(bd);
+      box2->CreateFixture(fd1);
+
+      // The pulley joint
+      b2PulleyJointDef* myjoint = new b2PulleyJointDef();
+      b2Vec2 worldAnchorOnBody1(112, 2); // Anchor point on body 1 in world axis
+      b2Vec2 worldAnchorOnBody2(92, 20); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorGround1(112, 37); // Anchor point for ground 1 in world axis
+      b2Vec2 worldAnchorGround2(92, 37); // Anchor point for ground 2 in world axis
+      float32 ratio = 1.0f; // Define ratio
+      myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
+      m_world->CreateJoint(myjoint);
+    }
+
     }
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
 }
