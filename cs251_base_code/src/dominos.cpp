@@ -27,9 +27,9 @@
 #include "render.hpp"
 
 #ifdef __APPLE__
-	#include <GLUT/glut.h>
+  #include <GLUT/glut.h>
 #else
-	#include "GL/freeglut.h"
+  #include "GL/freeglut.h"
 #endif
 
 #include <cstring>
@@ -46,17 +46,15 @@ namespace cs251
   dominos_t::dominos_t()
   {
     //Ground
-    /*! \var g1,g2,g3,g4,g5
-     * \brief pointers to the body ground
-     */
+    /** \brief g1,g2,g3,g4,g5 are pointers to the body ground */
     {//a part of the Ground
        b2Body* g1;
         {//a part of the Ground
-          b2EdgeShape shape;/// shape of type b2EdgeShape which is a line segment 
-          shape.Set(b2Vec2(30.0f, 0.0f), b2Vec2(150.0f, 0.0f));/// sets the shape between the points given 
-          b2BodyDef bd;///a body defintion (holds the data needed to construct a rigid body, type - b2BodyDef) 
-          g1 = m_world->CreateBody(&bd);/// CreateBody creates the body in simulation
-          g1->CreateFixture(&shape, 0.0f);/// CreateFixture fixes the shape of body as defined
+          b2EdgeShape shape; ///< shape of type b2EdgeShape which is a line segment 
+          shape.Set(b2Vec2(30.0f, 0.0f), b2Vec2(150.0f, 0.0f)); ///< sets the shape between the points given 
+          b2BodyDef bd; ///< a body defintion (holds the data needed to construct a rigid body, type - b2BodyDef) 
+          g1 = m_world->CreateBody(&bd); /// CreateBody creates the body in simulation
+          g1->CreateFixture(&shape, 0.0f); /// CreateFixture fixes the shape of body as defined
         } 
       //a part of the Ground    
         b2Body* g2;
@@ -80,7 +78,7 @@ namespace cs251
         b2Body* g4;
         {
           b2EdgeShape shape;/// shape of type b2EdgeShape which is a line segment 
-          shape.Set(b2Vec2(10.0f, 0.0f), b2Vec2(10.0f, -5.0f));;/// sets the shape between the points given 
+          shape.Set(b2Vec2(10.0f, 0.0f), b2Vec2(10.0f, -5.0f));/// sets the shape between the points given 
           b2BodyDef bd;///a body defintion (holds the data needed to construct a rigid body, type - b2BodyDef) 
           g4 = m_world->CreateBody(&bd);/// CreateBody creates the body in simulation
           g4->CreateFixture(&shape, 0.0f);/// CreateFixture fixes the shape of body as defined
@@ -102,7 +100,7 @@ namespace cs251
     
       b2PolygonShape shape;///< shape is variable of type b2PolygonShape
       shape.SetAsBox(8.0f, 0.25f);///< SetAsBox sets the dimensions of box(shape) 
-	
+  
       b2BodyDef bd;///a body defintion (holds the data needed to construct a rigid body, type - b2BodyDef) 
       bd.position.Set(-33.0f, 20.0f);/// Sets the position of body to be created
       b2Body* ground = m_world->CreateBody(&bd);/// CreateBody creates the body in simulation
@@ -136,22 +134,22 @@ namespace cs251
   {
       b2PolygonShape shape;///< shape is variable of type b2PolygonShape
       shape.SetAsBox(0.1f, 1.0f);///< SetAsBox sets the dimensions of box(shape) 
-	
+  
       b2FixtureDef fd; /// fd is variable of type b2FixtureDef
                        /// maintains properties of body
       fd.shape = &shape; /// fixes the shape of body as defined
       fd.density = 20.0f; /// fixes density of body
       fd.friction = 0.1f; /// fixing friction coefficient of body
     
-		
+    
       for (int i = 0; i < 11; ++i)
-	     {
-	       b2BodyDef bd;///a body defintion (holds the data needed to construct a rigid body, type - b2BodyDef) 
-	       bd.type = b2_dynamicBody;/// Sets the type of body to be created
-	       bd.position.Set(-35.65f + 1.0f * i, 21.25f);/// Sets the position of body to be created
-    	  b2Body* body = m_world->CreateBody(&bd);/// CreateBody creates the body in simulation
-    	  body->CreateFixture(&fd);/// CreateFixture fixes the shape of body as defined   
-	     } 
+       {
+         b2BodyDef bd;///a body defintion (holds the data needed to construct a rigid body, type - b2BodyDef) 
+         bd.type = b2_dynamicBody;/// Sets the type of body to be created
+         bd.position.Set(-35.65f + 1.0f * i, 21.25f);/// Sets the position of body to be created
+        b2Body* body = m_world->CreateBody(&bd);/// CreateBody creates the body in simulation
+        body->CreateFixture(&fd);/// CreateFixture fixes the shape of body as defined   
+       } 
   }
 
       // horizontal,vertical shelf near domino
