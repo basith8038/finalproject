@@ -22,6 +22,7 @@ OBJDIR = $(PROJECT_ROOT)/obj
 BINDIR = $(PROJECT_ROOT)/bin
 DOCDIR = $(PROJECT_ROOT)/doc
 
+
 # Library Paths
 BOX2D_ROOT=$(EXTERNAL_ROOT)
 GLUI_ROOT=/usr
@@ -57,7 +58,7 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup codeDoc clean distclean profile
+.PHONY: all setup codeDoc clean distclean profile report
 
 all: setup $(BINDIR)/$(TARGET)
 
@@ -99,8 +100,23 @@ codeDoc:
 clean:
 	@$(ECHO) -n "Cleaning up..."
 	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~
+	@ cd report;rm *.aux ;rm *.log;rm *.nav;rm *.out;rm *.snm;rm *.toc;rm *.pdf;rm *.bbl;rm *.blg \
 	@$(ECHO) "Done"
 
 distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
 
+profile:
+	@gprof ./bin/cs251_base gmon.out > analysis.txt
+	@python3 gprof2dot.py analysis.txt > output.dot
+	@dot -Tpng output.dot > output.png
+
+release:
+	@ pushd ./external/src ;echo hi ;tar -xvzf Box2D.tgz ;cd Box2D;mkdir build251;cd build251;cmake ../;make;make install \
+
+report:
+	@ cd report;pdflatex Report.tex ;bibtex Report;pdflatex Report.tex;pdflatex presentation.tex \
+
+	
+
+	
