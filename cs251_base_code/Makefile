@@ -104,10 +104,3 @@ clean:
 distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
 
-profile:
-	@gprof ./bin/cs251_base gmon.out > analysis.txt
-	@python3 gprof2dot.py analysis.txt > output.dot
-	@dot -Tpng output.dot > output.png
-
-release:
-	@ pushd ./external/src ;echo hi ;tar -xvzf Box2D.tgz ;cd Box2D;mkdir build251;cd build251;cmake ../;make;make install \
