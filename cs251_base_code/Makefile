@@ -103,7 +103,7 @@ clean:
 	@$(RM) -f gmon.out
 	@$(RM) -f analysis.txt
 	@$(RM) -f output.*
-	@ cd report;rm -f *.aux ;rm -f *.log;rm -f *.nav;rm -f *.out;rm -f *.snm;rm -f *.toc;rm -f *.pdf;cd ../;echo "Done" \
+	@ cd report;rm -f *.aux ;rm -f *.log;rm -f *.nav;rm -f *.out;rm -f *.snm;rm -f *.toc;rm -f *.pdf;rm -f *.bbl;rm -f *.blg;cd ../;echo "Done" \
 
 distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
